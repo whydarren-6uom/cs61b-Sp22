@@ -6,14 +6,38 @@ public class Solutions {
     /** Returns whether or not the input x is even.
      */
     public static boolean isEven(int x) {
-        // TODO: Your code here. Replace the following return statement.
+        return x % 2 == 0;
+    }
+
+    public static int max(int[] a) {
+        int maxi = 0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] > maxi) {
+                maxi = a[i];
+            }
+        }
+        return maxi;
+    }
+
+    public static boolean wordBank(String word, String[] bank) {
+        for (int i = 0; i < bank.length; i++) {
+            if (word.equals(bank[i])) {
+                return true;
+            }
+        }
         return false;
     }
 
-    // TODO: Fill in the method signatures for the other exercises
-    // Your methods should be static for this HW. DO NOT worry about what this means.
-    // Note that "static" is not necessarily a default, it just happens to be what
-    // we want for THIS homework. In the future, do not assume all methods should be
-    // static.
-
+    public static boolean threeSum(int[] a) {
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length; j++) {
+                for (int k = 0; k < a.length; k++){
+                    if (a[i] + a[j] + a[k] == 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
