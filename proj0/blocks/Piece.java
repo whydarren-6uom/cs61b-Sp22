@@ -45,7 +45,7 @@ class Piece {
     /** Return true iff (ROW, COL) is a position in this Piece and is
      *  filled.  ROW and COL are relative to this Piece's reference point. */
     boolean get(int row, int col) {
-        return true; // FIXME
+        return (row <= height() && col <= width() && _positions[row][col]);
     }
 
     /** Return true iff _positions meets all the requirements for a correctly

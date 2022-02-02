@@ -1,5 +1,6 @@
 package blocks;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import static blocks.Utils.*;
@@ -21,7 +22,18 @@ class PuzzleGenerator implements PuzzleSource {
     public boolean deal(Model model, int handSize) {
         assert handSize > 0;
         model.clearHand();
-        // FIXME
+        int i, r;
+        ArrayList already = new ArrayList<>();
+        i = 0;
+        while (i < handSize) {
+            r = _random.nextInt(PIECES.length);
+            if (already.size() == PIECES.length) { return false; }
+            if (! already.contains(r)) {
+                model.deal(PIECES[r]);
+                already.add(r);
+                i += 1;
+            }
+        }
         return true;
     }
 

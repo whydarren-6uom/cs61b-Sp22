@@ -29,7 +29,9 @@ class Model {
         _height = height;
         _width = width;
         _cells = new boolean[_height][_width];
-        // FIXME
+        _score = 0;
+        _streakLength = 1;
+        _hand = new ArrayList<>();
         _current = _lastHistory = -1;
     }
 
@@ -39,7 +41,9 @@ class Model {
         _width = model.width(); _height = model.height();
         _cells = new boolean[_height][_width];
         deepCopy(model._cells, _cells);
-        // FIXME
+        _score = model._score;
+        _streakLength = model._streakLength;
+        _hand = model._hand;
         _current = model._current;
         _lastHistory = model._lastHistory;
         for (GameState g : model._history.subList(0, model._lastHistory + 1)) {
@@ -60,7 +64,7 @@ class Model {
     /** Returns the number of pieces dealt to the hand since this Model
      *  was created or the hand was last cleared. */
     int handSize() {
-        return 0; // FIXME
+        return _hand.size();
     }
 
     /** Return piece #K (numbering from 0) in the current hand. Returns
@@ -70,22 +74,35 @@ class Model {
         if (k < 0 || k >= _hand.size()) {
             return null;
         }
-        return null; // FIXME
+        return _hand.get(k);
     }
 
     /** Return true iff PIECE may be added to the board with its
      *  reference point at (ROW, COL). False if PIECE == null. */
     boolean placeable(Piece piece, int row, int col) {
-        if (piece == null) {
-            return false;
+        if (piece == null) { return false; }
+
+        for (int r=0;r<piece.height();r++) {
+            for (int c=0;c<piece.width();c++) {
+                if (piece.get(r, c)) {
+                    if (get(row + r, col + c)) {
+                        return false;
+                    }
+                }
+            }
         }
-        // FIXME
         return true;
     }
 
     /** Return true iff PIECE may be added to the board at some position. */
     boolean placeable(Piece piece) {
-        // FIXME
+        for (int r=0;r<_height;r++) {
+            for (int c=0;c<_width;c++) {
+                if (placeable(piece, r, c)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -104,7 +121,16 @@ class Model {
      *  there. Also updates score(). */
     void place(Piece piece, int row, int col) {
         assert placeable(piece, row, col);
-        // FIXME
+        int fill_cells = 0;
+        for (int r=0;r<piece.height();r++) {
+            for (int c=0;c<piece.width();c++) {
+                if (piece.get(r, c)) {
+                    _cells[row+r][col+c] = true;
+                    fill_cells += 1;
+                }
+            }
+        }
+        _score += fill_cells;
     }
 
     /** Place piece(K) on the board at (ROW, COL), assuming it is placeable
@@ -112,7 +138,7 @@ class Model {
      *  the hand). Also updates score(). */
     void place(int k, int row, int col) {
         place(piece(k), row, col);
-        // FIXME
+        _hand.set(k, null);
     }
 
     /** Return an array COUNTS such that COUNTS[0][r] is the number of
@@ -120,7 +146,14 @@ class Model {
      *  filled grid cells in column c. */
     int[][] rowColumnCounts() {
         int[][] result = new int[][] { new int[_height], new int[_width] };
-        // FIXME
+        for (int r=0;r<_height;r++) {
+            for (int c=0;c<_width;c++) {
+                if (_cells[r][c]) {
+                    result[0][r] += 1;
+                    result[1][c] += 1;
+                }
+            }
+        }
         return result;
     }
 
@@ -130,38 +163,57 @@ class Model {
         int nrows, ncols;
         int[][] counts = rowColumnCounts();
         nrows = ncols = 0;
-        // FIXME
-        _score += scoreClearedLines(nrows, ncols);
+        for (int r=0;r<_height;r++) {
+            if (counts[0][r] == _width) {
+                nrows += 1;
+                for (int c=0;c<_width;c++) { _cells[r][c] = false; }
+            }
+        }
+        for (int c=0;c<_width;c++) {
+            if (counts[1][c] == _height) {
+                ncols += 1;
+                for (int r=0;r<_height;r++) { _cells[r][c] = false; }
+            }
+        }
+        _score += _streakLength * (nrows * _width + ncols * _height) + scoreClearedLines(nrows, ncols);
+        if (nrows != 0 || ncols != 0) {
+            _streakLength += 1;
+        }
+        if (ncols == 0 && nrows == 0){
+            _streakLength = 1;
+        }
     }
 
     /** Return the score increase caused by clearing full lines, given that
      *  NROWS is the number of rows cleared and NCOLS is the number
      *  of columns cleared. */
     private int scoreClearedLines(int nrows, int ncols) {
-        return 0; // FIXME
+        return nrows * _width + ncols * _height - nrows * ncols;
     }
 
     /** Return true iff the current hand is empty (i.e., piece(k) is null
      *  for all k). */
     boolean handUsed() {
-        // FIXME
+        for (int i=0;i<handSize();i++) {
+            if (piece(i) != null) {
+                return false;
+            }
+        }
         return true;
     }
 
     /** Empty all Pieces from the current hand. */
     void clearHand() {
-        // FIXME
+        _hand.clear();
     }
 
     /** Add PIECE to the current hand.  Assumes PIECE is not null. */
     void deal(Piece piece) {
-        // FIXME
+        _hand.add(piece);
     }
 
     /** Return current score. */
-    int score() {
-        return _score;
-    }
+    int score() { return _score; }
 
     /** Save the current state on the undo history. */
     void pushState() {
@@ -177,7 +229,8 @@ class Model {
      *  Does nothing if at the initial board. */
     void undo() {
         if (_current > 0) {
-            return; // FIXME
+            _current -= 1;
+            _history.get(_current).restoreState();
         }
     }
 
@@ -185,14 +238,18 @@ class Model {
      *  there are no available undone boards. */
     void redo() {
         if (_current < _lastHistory) {
-            return; // FIXME
+            _current += 1;
+            _history.get(_current).restoreState();
         }
     }
 
     /** Returns true if this puzzle round is over because the hand is not empty
      *  but contains only Pieces that cannot be placed.  */
     boolean roundOver() {
-        return true; // FIXME
+        for (int i=0;i<handSize();i++) {
+            if (piece(i) != null && placeable(piece(i))) { return false; }
+        }
+        return true;
     }
 
     /** Returns true iff (ROW, COL) is a valid cell location. */
@@ -204,7 +261,7 @@ class Model {
      *  or is currently filled.   That is, it returns true iff one may not
      *  add a Piece that would fill location (ROW, COL). */
     boolean get(int row, int col) {
-        return true; // FIXME
+        return ! isCell(row, col) || _cells[row][col];
     }
 
     @Override
