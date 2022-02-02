@@ -80,10 +80,12 @@ class Model {
     /** Return true iff PIECE may be added to the board with its
      *  reference point at (ROW, COL). False if PIECE == null. */
     boolean placeable(Piece piece, int row, int col) {
-        if (piece == null) { return false; }
+        if (piece == null) {
+            return false;
+        }
 
-        for (int r=0;r<piece.height();r++) {
-            for (int c=0;c<piece.width();c++) {
+        for (int r = 0; r < piece.height(); r++) {
+            for (int c = 0; c < piece.width(); c++) {
                 if (piece.get(r, c)) {
                     if (get(row + r, col + c)) {
                         return false;
@@ -96,8 +98,8 @@ class Model {
 
     /** Return true iff PIECE may be added to the board at some position. */
     boolean placeable(Piece piece) {
-        for (int r=0;r<_height;r++) {
-            for (int c=0;c<_width;c++) {
+        for (int r = 0; r < _height; r++) {
+            for (int c = 0; c < _width; c++) {
                 if (placeable(piece, r, c)) {
                     return true;
                 }
@@ -121,16 +123,16 @@ class Model {
      *  there. Also updates score(). */
     void place(Piece piece, int row, int col) {
         assert placeable(piece, row, col);
-        int fill_cells = 0;
-        for (int r=0;r<piece.height();r++) {
-            for (int c=0;c<piece.width();c++) {
+        int fillCells = 0;
+        for (int r = 0; r < piece.height(); r++) {
+            for (int c = 0; c < piece.width(); c++) {
                 if (piece.get(r, c)) {
-                    _cells[row+r][col+c] = true;
-                    fill_cells += 1;
+                    _cells[row + r][col + c] = true;
+                    fillCells += 1;
                 }
             }
         }
-        _score += fill_cells;
+        _score += fillCells;
     }
 
     /** Place piece(K) on the board at (ROW, COL), assuming it is placeable
@@ -146,8 +148,8 @@ class Model {
      *  filled grid cells in column c. */
     int[][] rowColumnCounts() {
         int[][] result = new int[][] { new int[_height], new int[_width] };
-        for (int r=0;r<_height;r++) {
-            for (int c=0;c<_width;c++) {
+        for (int r = 0; r < _height; r++) {
+            for (int c = 0; c < _width; c++) {
                 if (_cells[r][c]) {
                     result[0][r] += 1;
                     result[1][c] += 1;
@@ -163,23 +165,28 @@ class Model {
         int nrows, ncols;
         int[][] counts = rowColumnCounts();
         nrows = ncols = 0;
-        for (int r=0;r<_height;r++) {
+        for (int r = 0; r < _height; r++) {
             if (counts[0][r] == _width) {
                 nrows += 1;
-                for (int c=0;c<_width;c++) { _cells[r][c] = false; }
+                for (int c = 0; c < _width; c++) {
+                    _cells[r][c] = false;
+                }
             }
         }
-        for (int c=0;c<_width;c++) {
+        for (int c = 0; c < _width; c++) {
             if (counts[1][c] == _height) {
                 ncols += 1;
-                for (int r=0;r<_height;r++) { _cells[r][c] = false; }
+                for (int r = 0; r < _height; r++) {
+                    _cells[r][c] = false;
+                }
             }
         }
-        _score += _streakLength * (nrows * _width + ncols * _height) + scoreClearedLines(nrows, ncols);
+        _score += _streakLength * (nrows * _width + ncols * _height);
+        _score += scoreClearedLines(nrows, ncols);
         if (nrows != 0 || ncols != 0) {
             _streakLength += 1;
         }
-        if (ncols == 0 && nrows == 0){
+        if (ncols == 0 && nrows == 0) {
             _streakLength = 1;
         }
     }
@@ -194,7 +201,7 @@ class Model {
     /** Return true iff the current hand is empty (i.e., piece(k) is null
      *  for all k). */
     boolean handUsed() {
-        for (int i=0;i<handSize();i++) {
+        for (int i = 0; i < handSize(); i++) {
             if (piece(i) != null) {
                 return false;
             }
@@ -213,7 +220,9 @@ class Model {
     }
 
     /** Return current score. */
-    int score() { return _score; }
+    int score() {
+        return _score;
+    }
 
     /** Save the current state on the undo history. */
     void pushState() {
@@ -246,8 +255,10 @@ class Model {
     /** Returns true if this puzzle round is over because the hand is not empty
      *  but contains only Pieces that cannot be placed.  */
     boolean roundOver() {
-        for (int i=0;i<handSize();i++) {
-            if (piece(i) != null && placeable(piece(i))) { return false; }
+        for (int i = 0; i < handSize(); i++) {
+            if (piece(i) != null && placeable(piece(i))) {
+                return false;
+            }
         }
         return true;
     }
@@ -261,7 +272,7 @@ class Model {
      *  or is currently filled.   That is, it returns true iff one may not
      *  add a Piece that would fill location (ROW, COL). */
     boolean get(int row, int col) {
-        return ! isCell(row, col) || _cells[row][col];
+        return !isCell(row, col) || _cells[row][col];
     }
 
     @Override

@@ -27,8 +27,10 @@ class PuzzleGenerator implements PuzzleSource {
         i = 0;
         while (i < handSize) {
             r = _random.nextInt(PIECES.length);
-            if (already.size() == PIECES.length) { return false; }
-            if (! already.contains(r)) {
+            if (already.size() == PIECES.length) {
+                return false;
+            }
+            if (!already.contains(r)) {
                 model.deal(PIECES[r]);
                 already.add(r);
                 i += 1;
