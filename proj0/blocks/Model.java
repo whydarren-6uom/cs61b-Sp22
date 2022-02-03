@@ -15,7 +15,7 @@ import static blocks.Utils.*;
  *  determining whether a puzzle piece may be added at a given position or
  *  anywhere, and undoing or redoing moves.
  *
- *  @author
+ *  @author D.Wang
  */
 class Model {
 

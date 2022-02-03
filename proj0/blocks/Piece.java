@@ -12,7 +12,7 @@ import static blocks.Utils.positions;
  *  Adding a Piece to the Blocks board fills a set of previously open grid
  *  cells corresponding to the positions stored in the Piece, after selecting
  *  a position on the board to correspond to the Piece's reference point.
- *  @author
+ *  @author D.Wang
  */
 class Piece {
 
