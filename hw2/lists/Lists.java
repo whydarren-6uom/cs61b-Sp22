@@ -5,10 +5,8 @@ package lists;
 
 /** HW #2, Problem #1. */
 
-import image.In;
-
 /** List problem.
- *  @author
+ *  @author Darren Wang
  */
 class Lists {
 
@@ -30,10 +28,13 @@ class Lists {
         IntListList resultPointer = result;
         result.head = L;
         while (L.tail != null) {
-            if (L.head > L.tail.head) {
-                // FIXME: Do something
+            if (L.head >= L.tail.head) {
+                result.tail = new IntListList(L.tail, null);
+                L.tail = null;
+                L = result.tail.head;
+                result = result.tail;
             } else {
-                // FIXME: Do something else
+                L = L.tail;
             }
         }
         return resultPointer;

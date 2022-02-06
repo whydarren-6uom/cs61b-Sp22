@@ -6,7 +6,7 @@ package arrays;
 /** HW #2 */
 
 /** Array utilities.
- *  @author
+ *  @author Darren Wang
  */
 class Arrays {
 
@@ -14,8 +14,10 @@ class Arrays {
     /** Returns a new array consisting of the elements of A followed by the
      *  the elements of B. */
     static int[] catenate(int[] A, int[] B) {
-        //FIXME: Replace this body with the solution.
-        return null;
+        int[] n = new int[A.length + B.length];
+        System.arraycopy(A, 0, n, 0, A.length);
+        System.arraycopy(B, 0, n, A.length, B.length);
+        return n;
     }
 
     /* C2. */
@@ -25,8 +27,17 @@ class Arrays {
      *  Example: if A is [0, 1, 2, 3] and start is 1 and len is 2, the
      *  result should be [0, 3]. */
     static int[] remove(int[] A, int start, int len) {
-        // FIXME: Replace this body with the solution.
-        return null;
+        int[] n = new int[A.length - len];
+        int i = 0;
+        int j = 0;
+        while (i < A.length) {
+            if (i < start || i >= start + len) {
+                n[j] = A[i];
+                j++;
+            }
+            i++;
+        }
+        return n;
     }
 
 }
