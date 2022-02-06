@@ -96,7 +96,7 @@ public class MatrixUtils {
 
     public static double[][] accumulate(double[][] m, Orientation orientation) {
         if (orientation == Orientation.HORIZONTAL) {
-            return transMatrix(transMatrix(transMatrix(accumulateVertical(transMatrix(m)))));
+            return transMatrix(accumulateVertical(transMatrix(m)));
         }
         return accumulateVertical(m);
     }
@@ -156,7 +156,19 @@ public class MatrixUtils {
      *  total energy is approximately equal.
      */
     public static int[] findVerticalSeam(double[][] m) {
-        return null; //OPTIONAL FIXME: your code here
+        int[] indices = new int[m.length];
+        int x = 0;
+        double min = 10 ^ 7;
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                if (m[i][j] < min) {
+                    min = m[i][j];
+                    x = j;
+                }
+            }
+            indices[i] = x;
+        }
+        return indices;
     }
 
     /** Returns the SEAM of M with the given ORIENTATION.
@@ -164,7 +176,10 @@ public class MatrixUtils {
      *  a helper method.
      */
     public static int[] findSeam(double[][] m, Orientation orientation) {
-        return null; //OPTIONAL FIXME: your code here
+        if (orientation == Orientation.HORIZONTAL) {
+            return findVerticalSeam(transMatrix(m));
+        }
+        return findVerticalSeam(m);
     }
 
     /** does nothing. ARGS not used. use for whatever purposes you'd like */
