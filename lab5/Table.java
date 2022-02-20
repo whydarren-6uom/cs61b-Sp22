@@ -217,19 +217,14 @@ public class Table implements Iterable<Table.TableRow> {
         @Override
         public boolean hasNext() {
             if (_nextRow == null) {
-                TableRow currRow2;
-                try {
-                    currRow2 = _tableIter2.next();
-                } catch (NoSuchElementException e) {
-                    try {
-                        _currRow1 = _tableIter1.next();
-                    } catch (NoSuchElementException E) {
-                        return _nextRow != null;
+                if (!_tableIter2.hasNext()) {
+                    if (!_tableIter1.hasNext()) {
+                        return false;
                     }
+                    _currRow1 = _tableIter1.next();
                     _tableIter2 = _table2.iterator();
-                    currRow2 = _tableIter2.next();
                 }
-                _nextRow = TableRow.joinRows(_currRow1, currRow2);
+                _nextRow = TableRow.joinRows(_currRow1, _tableIter2.next());
             }
             return _nextRow != null;
         }
