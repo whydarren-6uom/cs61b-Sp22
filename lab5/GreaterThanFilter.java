@@ -7,14 +7,19 @@ public class GreaterThanFilter extends TableFilter {
 
     public GreaterThanFilter(Table input, String colName, String ref) {
         super(input);
-        // FIXME: Add your code here.
+        _colIndex = input.colNameToIndex(colName);
+        _refStr = ref;
     }
 
     @Override
     protected boolean keep() {
-        // FIXME: Replace this line with your code.
+        if (candidateNext().getValue(_colIndex).compareTo(_refStr) > 0) {
+            return true;
+        }
         return false;
     }
 
-    // FIXME: Add instance variables?
+    private String _refStr;
+
+    private int _colIndex;
 }

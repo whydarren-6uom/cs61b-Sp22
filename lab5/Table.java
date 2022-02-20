@@ -217,14 +217,19 @@ public class Table implements Iterable<Table.TableRow> {
         @Override
         public boolean hasNext() {
             if (_nextRow == null) {
-                // FIXME: Fill in the hasNext method to update the _nextRow
-                //        variable to be the next joined row to be returned
-                //        by the iterator. The rows should be returned in the
-                //        order t1[0] + t2[0], t1[0] + t2[1], t1[0] + t2[2],
-                //        ..., t1[n] + t2[m]. I.e. the first row of t1 should
-                //        be joined to all the rows of t2, then the second row
-                //        of t1 should be joined to all of the rows of t2,
-                //        etc.
+                TableRow currRow2;
+                try {
+                    currRow2 = _tableIter2.next();
+                } catch (NoSuchElementException e) {
+                    try {
+                        _currRow1 = _tableIter1.next();
+                    } catch (NoSuchElementException E) {
+                        return _nextRow != null;
+                    }
+                    _tableIter2 = _table2.iterator();
+                    currRow2 = _tableIter2.next();
+                }
+                _nextRow = TableRow.joinRows(_currRow1, currRow2);
             }
             return _nextRow != null;
         }

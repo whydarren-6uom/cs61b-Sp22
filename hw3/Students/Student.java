@@ -23,7 +23,10 @@ public class Student {
     }
 
     public static void main(String[] args) {
-        // Add lines here to see what happens.
+        Student dexter = new BerkeleyStudent("Dexter", 21);
+        BerkeleyStudent grace = new CS61BStudent("Grace", 20);
+        CS61BStudent kyle = new CS61BStudent("Kyle", 19);
+        BerkeleyStudent claire = new BerkeleyStudent("Claire", 19);
     }
 
 }

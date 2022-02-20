@@ -7,14 +7,19 @@ public class SubstringFilter extends TableFilter {
 
     public SubstringFilter(Table input, String colName, String subStr) {
         super(input);
-        // FIXME: Add your code here.
+        _colIndex = input.colNameToIndex(colName);
+        _subStr = subStr;
     }
 
     @Override
     protected boolean keep() {
-        // FIXME: Replace this line with your code.
+        if (candidateNext().getValue(_colIndex).contains(_subStr)) {
+            return true;
+        }
         return false;
     }
 
-    // FIXME: Add instance variables?
+    private String _subStr;
+
+    private int _colIndex;
 }
