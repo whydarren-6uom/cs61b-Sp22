@@ -3,7 +3,7 @@ package enigma;
 import static enigma.EnigmaException.*;
 
 /** Superclass that represents a rotor in the enigma machine.
- *  @author
+ *  @author Darren Wang
  */
 class Rotor {
 
@@ -11,7 +11,6 @@ class Rotor {
     Rotor(String name, Permutation perm) {
         _name = name;
         _permutation = perm;
-        // FIXME
     }
 
     /** Return my name. */
@@ -46,23 +45,24 @@ class Rotor {
 
     /** Return my current setting. */
     int setting() {
-        return 0; // FIXME
+        return _setting;
     }
 
     /** Set setting() to POSN.  */
     void set(int posn) {
-        // FIXME
+        _setting = posn;
     }
 
     /** Set setting() to character CPOSN. */
     void set(char cposn) {
-        // FIXME
+        _setting = alphabet().toInt(cposn);
     }
 
     /** Return the conversion of P (an integer in the range 0..size()-1)
      *  according to my permutation. */
     int convertForward(int p) {
-        int result = 0; // FIXME
+        int result = permutation().permute(p + setting()) - setting();
+        result = permutation().wrap(result);
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
         }
@@ -72,7 +72,8 @@ class Rotor {
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. */
     int convertBackward(int e) {
-        int result = 0; // FIXME
+        int result = permutation().invert(e + setting()) - setting();
+        result = permutation().wrap(result);
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
         }
@@ -88,7 +89,7 @@ class Rotor {
     /** Returns true iff I am positioned to allow the rotor to my left
      *  to advance. */
     boolean atNotch() {
-        return false; // FIXME
+        return notches().contains(String.valueOf(alphabet().toChar(setting())));
     }
 
     /** Advance me one position, if possible. By default, does nothing. */
@@ -106,6 +107,5 @@ class Rotor {
     /** The permutation implemented by this rotor in its 0 position. */
     private Permutation _permutation;
 
-    // FIXME: ADDITIONAL FIELDS HERE, AS NEEDED
-
+    protected int _setting = 0;
 }

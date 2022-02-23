@@ -4,17 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.util.*;
 
 import ucb.util.CommandArgs;
 
 import static enigma.EnigmaException.*;
 
 /** Enigma simulator.
- *  @author
+ *  @author Darren Wang
  */
 public final class Main {
 
@@ -85,16 +82,40 @@ public final class Main {
      *  file _config and apply it to the messages in _input, sending the
      *  results to _output. */
     private void process() {
-        // FIXME
+        Machine machine = readConfig();
+        while (_input.hasNext("(?<=^|\\n)\\\\*.*")) {
+            String[] rotors = new String[machine.numRotors()];
+            _input.next(); // for skipping the starting asterisk
+            for (int i = 0; i < machine.numRotors(); i++) {
+                rotors[i] = _input.next();
+            }
+            machine.insertRotors(rotors);
+            setUp(machine, _input.next());
+            String cycle = "";
+            while (_input.hasNext(".*[\\(|\\)]+.*")) {
+                cycle += _input.next();
+            }
+            machine.setPlugboard(new Permutation(cycle, _alphabet));
+            while (_input.hasNextLine() && !_input.hasNext("(?<=^|\n)\\*.*")) {
+                String nextLine = _input.nextLine().replaceAll("\\s", "");
+                printMessageLine(machine.convert(nextLine));
+            }
+        }
     }
 
     /** Return an Enigma machine configured from the contents of configuration
      *  file _config. */
     private Machine readConfig() {
         try {
-            // FIXME
-            _alphabet = new Alphabet();
-            return new Machine(_alphabet, 2, 1, null);
+            _alphabet = new Alphabet(_config.next());
+            int nRotors = _config.nextInt();
+            int nPawls = _config.nextInt();
+            HashMap<String, Rotor> Rotors = new HashMap<>();
+            while (_config.hasNext()) {
+                Rotor rotor = readRotor();
+                Rotors.put(rotor.name(), rotor);
+            }
+            return new Machine(_alphabet, nRotors, nPawls, Rotors.values());
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -103,7 +124,26 @@ public final class Main {
     /** Return a rotor, reading its description from _config. */
     private Rotor readRotor() {
         try {
-            return null; // FIXME
+            Rotor rotor;
+            String name = _config.next();
+            String typeNotch = _config.next();
+            Character type = typeNotch.charAt(0);
+            String notch = typeNotch.substring(1);
+            String cycle = "";
+            while (_config.hasNext(".*[\\\\(|\\\\)]+.*")) {
+                cycle += _config.next();
+            }
+            Permutation permutation = new Permutation(cycle, _alphabet);
+            if (type == 'M') {
+                rotor = new MovingRotor(name, permutation, notch);
+            } else if (type == 'N') {
+                rotor = new FixedRotor(name, permutation);
+            } else if (type == 'R') {
+                rotor = new Reflector(name, permutation);
+            } else {
+                throw new EnigmaException("No such type of rotor");
+            }
+            return rotor;
         } catch (NoSuchElementException excp) {
             throw error("bad rotor description");
         }
@@ -112,7 +152,7 @@ public final class Main {
     /** Set M according to the specification given on SETTINGS,
      *  which must have the format specified in the assignment. */
     private void setUp(Machine M, String settings) {
-        // FIXME
+        M.setRotors(settings);;
     }
 
     /** Return true iff verbose option specified. */
@@ -123,7 +163,13 @@ public final class Main {
     /** Print MSG in groups of five (except that the last group may
      *  have fewer letters). */
     private void printMessageLine(String msg) {
-        // FIXME
+        for (int i = 0; i < msg.length(); i++) {
+            _output.print(msg.charAt(i));
+            if (((i + 1) % 5 == 0) && ((i + 1) != msg.length())) {
+                _output.print(" ");
+            }
+        }
+        _output.print("\n");
     }
 
     /** Alphabet used in this machine. */
