@@ -15,7 +15,7 @@ class Permutation {
      *  Whitespace is ignored. */
     Permutation(String cycles, Alphabet alphabet) {
         _alphabet = alphabet;
-        _cycles = cycles.replaceAll("\\s", "");
+        _cycles = cycles.replaceAll("\s", "");
         if (!derangement()) {
             throw new EnigmaException("Permutation is NOT a derangement");
         }

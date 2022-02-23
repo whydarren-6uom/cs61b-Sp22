@@ -86,7 +86,7 @@ public final class Main {
      *  results to _output. */
     private void process() {
         Machine machine = readConfig();
-        while (_input.hasNext("(?<=^|\\n)\\\\*.*")) {
+        while (_input.hasNext("(?<=^|\n)\\*.*")) {
             String[] rotors = new String[machine.numRotors()];
             _input.next(); // for skipping the starting asterisk
             for (int i = 0; i < machine.numRotors(); i++) {
@@ -95,14 +95,15 @@ public final class Main {
             machine.insertRotors(rotors);
             setUp(machine, _input.next());
             String cycle = "";
-            while (_input.hasNext(".*[\\(|\\)]+.*")) {
+            while (_input.hasNext(".*[(|)]+.*")) {
                 cycle += _input.next();
             }
             machine.setPlugboard(new Permutation(cycle, _alphabet));
             while (_input.hasNextLine() && !_input.hasNext("(?<=^|\n)\\*.*")) {
-                String nextLine = _input.nextLine().replaceAll("\\s", "");
+                String nextLine = _input.nextLine().replaceAll("\s", "");
                 printMessageLine(machine.convert(nextLine));
             }
+            _output.print("\n");
         }
     }
 
@@ -133,7 +134,7 @@ public final class Main {
             Character type = typeNotch.charAt(0);
             String notch = typeNotch.substring(1);
             String cycle = "";
-            while (_config.hasNext(".*[\\\\(|\\\\)]+.*")) {
+            while (_config.hasNext(".*[(|)]+.*")) {
                 cycle += _config.next();
             }
             Permutation permutation = new Permutation(cycle, _alphabet);
@@ -172,7 +173,6 @@ public final class Main {
                 _output.print(" ");
             }
         }
-        _output.print("\n");
     }
 
     /** Alphabet used in this machine. */
