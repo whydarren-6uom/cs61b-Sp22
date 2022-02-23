@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import ucb.util.CommandArgs;
 
@@ -110,12 +113,12 @@ public final class Main {
             _alphabet = new Alphabet(_config.next());
             int nRotors = _config.nextInt();
             int nPawls = _config.nextInt();
-            HashMap<String, Rotor> Rotors = new HashMap<>();
+            HashMap<String, Rotor> rotors = new HashMap<>();
             while (_config.hasNext()) {
                 Rotor rotor = readRotor();
-                Rotors.put(rotor.name(), rotor);
+                rotors.put(rotor.name(), rotor);
             }
-            return new Machine(_alphabet, nRotors, nPawls, Rotors.values());
+            return new Machine(_alphabet, nRotors, nPawls, rotors.values());
         } catch (NoSuchElementException excp) {
             throw error("configuration file truncated");
         }
@@ -152,7 +155,7 @@ public final class Main {
     /** Set M according to the specification given on SETTINGS,
      *  which must have the format specified in the assignment. */
     private void setUp(Machine M, String settings) {
-        M.setRotors(settings);;
+        M.setRotors(settings);
     }
 
     /** Return true iff verbose option specified. */
