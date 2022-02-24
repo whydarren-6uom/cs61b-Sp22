@@ -1,7 +1,5 @@
 package enigma;
 
-import static enigma.EnigmaException.*;
-
 /** Class that represents a rotating rotor in the enigma machine.
  *  @author Darren Wang
  */
@@ -36,6 +34,8 @@ class MovingRotor extends Rotor {
         return _notches;
     }
 
-    private String _notches;
+    /** A String variable to save Notches for MovingRotors
+     */
+    private final String _notches;
 
 }

@@ -39,5 +39,7 @@ class Alphabet {
         return _chars.indexOf(ch);
     }
 
-    private String _chars;
+    /** All characters in an alphabet by sequence.
+     */
+    private final String _chars;
 }

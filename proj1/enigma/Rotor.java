@@ -1,7 +1,5 @@
 package enigma;
 
-import static enigma.EnigmaException.*;
-
 /** Superclass that represents a rotor in the enigma machine.
  *  @author Darren Wang
  */
@@ -105,7 +103,9 @@ class Rotor {
     private final String _name;
 
     /** The permutation implemented by this rotor in its 0 position. */
-    private Permutation _permutation;
+    private final Permutation _permutation;
 
+    /** Current setting of a Rotor. By default 0.
+     */
     protected int _setting = 0;
 }

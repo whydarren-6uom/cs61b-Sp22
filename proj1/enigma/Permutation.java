@@ -1,7 +1,5 @@
 package enigma;
 
-import static enigma.EnigmaException.*;
-
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
  *  @author Darren Wang
@@ -16,9 +14,6 @@ class Permutation {
     Permutation(String cycles, Alphabet alphabet) {
         _alphabet = alphabet;
         _cycles = cycles.replaceAll("\s", "");
-        if (!derangement()) {
-            throw new EnigmaException("Permutation is NOT a derangement");
-        }
     }
 
     /** Return the value of P modulo the size of this permutation. */
@@ -106,7 +101,9 @@ class Permutation {
     }
 
     /** Alphabet of this permutation. */
-    private Alphabet _alphabet;
+    private final Alphabet _alphabet;
 
-    private String _cycles;
+    /** Save cycles of this permutation.
+     */
+    private final String _cycles;
 }

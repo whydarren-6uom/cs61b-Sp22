@@ -75,7 +75,7 @@ public final class Main {
     /** Return a PrintStream writing to the file named NAME. */
     private PrintStream getOutput(String name) {
         try {
-            return new PrintStream(new File(name));
+            return new PrintStream(name);
         } catch (IOException excp) {
             throw error("could not open %s", name);
         }
@@ -86,19 +86,22 @@ public final class Main {
      *  results to _output. */
     private void process() {
         Machine machine = readConfig();
+        if (!_input.hasNext("(?<=^|\n)\\*.*")) {
+            throw new EnigmaException("Invalid input file.");
+        }
         while (_input.hasNext("(?<=^|\n)\\*.*")) {
             String[] rotors = new String[machine.numRotors()];
-            _input.next(); // for skipping the starting asterisk
+            _input.next();
             for (int i = 0; i < machine.numRotors(); i++) {
                 rotors[i] = _input.next();
             }
             machine.insertRotors(rotors);
             setUp(machine, _input.next());
-            String cycle = "";
+            StringBuilder cycle = new StringBuilder();
             while (_input.hasNext(".*[(|)]+.*")) {
-                cycle += _input.next();
+                cycle.append(_input.next());
             }
-            machine.setPlugboard(new Permutation(cycle, _alphabet));
+            machine.setPlugboard(new Permutation(cycle.toString(), _alphabet));
             while (_input.hasNextLine() && !_input.hasNext("(?<=^|\n)\\*.*")) {
                 String nextLine = _input.nextLine().replaceAll("\s", "");
                 printMessageLine(machine.convert(nextLine));
@@ -117,6 +120,9 @@ public final class Main {
             HashMap<String, Rotor> rotors = new HashMap<>();
             while (_config.hasNext()) {
                 Rotor rotor = readRotor();
+                if (rotors.containsKey(rotor.name())) {
+                    throw new EnigmaException("Duplicate rotor detected.");
+                }
                 rotors.put(rotor.name(), rotor);
             }
             return new Machine(_alphabet, nRotors, nPawls, rotors.values());
@@ -131,13 +137,16 @@ public final class Main {
             Rotor rotor;
             String name = _config.next();
             String typeNotch = _config.next();
-            Character type = typeNotch.charAt(0);
+            char type = typeNotch.charAt(0);
             String notch = typeNotch.substring(1);
-            String cycle = "";
-            while (_config.hasNext(".*[(|)]+.*")) {
-                cycle += _config.next();
+            StringBuilder cycle = new StringBuilder();
+            if (name.contains("(") || name.contains(")")) {
+                throw new EnigmaException("'(' or ')' not allowed in rotor name.");
             }
-            Permutation permutation = new Permutation(cycle, _alphabet);
+            while (_config.hasNext(".*[(|)]+.*")) {
+                cycle.append(_config.next());
+            }
+            Permutation permutation = new Permutation(cycle.toString(), _alphabet);
             if (type == 'M') {
                 rotor = new MovingRotor(name, permutation, notch);
             } else if (type == 'N') {
@@ -145,7 +154,7 @@ public final class Main {
             } else if (type == 'R') {
                 rotor = new Reflector(name, permutation);
             } else {
-                throw new EnigmaException("No such type of rotor");
+                throw new NoSuchElementException();
             }
             return rotor;
         } catch (NoSuchElementException excp) {
@@ -179,13 +188,13 @@ public final class Main {
     private Alphabet _alphabet;
 
     /** Source of input messages. */
-    private Scanner _input;
+    private final Scanner _input;
 
     /** Source of machine configuration. */
-    private Scanner _config;
+    private final Scanner _config;
 
     /** File for encoded/decoded messages. */
-    private PrintStream _output;
+    private final PrintStream _output;
 
     /** True if --verbose specified. */
     private static boolean _verbose;

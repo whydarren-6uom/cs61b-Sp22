@@ -1,9 +1,7 @@
 package enigma;
 
-import java.util.HashMap;
 import java.util.Collection;
-
-import static enigma.EnigmaException.*;
+import java.util.HashMap;
 
 /** Class that represents a complete enigma machine.
  *  @author Darren Wang
@@ -18,8 +16,7 @@ class Machine {
         _alphabet = alpha;
         _numRotors = numRotors;
         _pawls = pawls;
-        _allRotors = allRotors;
-        for (Rotor r : _allRotors) {
+        for (Rotor r : allRotors) {
             _allRotorsMap.put(r.name(), r);
         }
     }
@@ -79,7 +76,7 @@ class Machine {
     int convert(int c) {
         advanceRotors();
         if (Main.verbose()) {
-            System.err.printf("[");
+            System.err.print("[");
             for (int r = 1; r < numRotors(); r += 1) {
                 System.err.printf("%c",
                         alphabet().toChar(getRotor(r).setting()));
@@ -132,21 +129,38 @@ class Machine {
     /** Returns the encoding/decoding of MSG, updating the state of
      *  the rotors accordingly. */
     String convert(String msg) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < msg.length(); i++) {
             int chr = alphabet().toInt(msg.charAt(i));
-            result += alphabet().toChar(convert(chr));
+            result.append(alphabet().toChar(convert(chr)));
         }
-        return result;
+        return result.toString();
     }
 
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
 
-    private int _numRotors;
-    private int _pawls;
-    private Collection<Rotor> _allRotors;
-    private HashMap<String, Rotor> _allRotorsMap = new HashMap<>();
-    private HashMap<Integer, Rotor> _insertedRotors = new HashMap<>();
+    /** Number of Rotors slots on a machine.
+     */
+    private final int _numRotors;
+
+    /** Number of pawls on a machine. It also represents the
+     *  number of MovingRotors.
+     */
+    private final int _pawls;
+
+    /** A new hashmap to save all rotors,
+     *  the keys are the names of rotors.
+     */
+    private final HashMap<String, Rotor> _allRotorsMap = new HashMap<>();
+
+    /** A new hashmap to save all inserted rotors,
+     *  the keys are the index of rotors inserted.
+     */
+    private final HashMap<Integer, Rotor> _insertedRotors = new HashMap<>();
+
+    /** A permutation instance to save plugboard
+     *  permutations.
+     */
     private Permutation _plugboard;
 }
