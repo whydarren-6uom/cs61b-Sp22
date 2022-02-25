@@ -102,8 +102,10 @@ public final class Main {
                 cycle.append(_input.next());
             }
             machine.setPlugboard(new Permutation(cycle.toString(), _alphabet));
-            while (_input.hasNextLine() && !_input.hasNext("(?<=^|\n)\\*.*")) {
-                String nextLine = _input.nextLine().replaceAll("\s", "");
+            while (_input.hasNextLine() &&
+                    !_input.hasNext("(?<=^|\n)\\*.*")) {
+                String nextLine = _input.nextLine().replaceAll
+                        ("\s", "");
                 printMessageLine(machine.convert(nextLine));
             }
             _output.print("\n");
@@ -141,12 +143,14 @@ public final class Main {
             String notch = typeNotch.substring(1);
             StringBuilder cycle = new StringBuilder();
             if (name.contains("(") || name.contains(")")) {
-                throw new EnigmaException("'(' or ')' not allowed in rotor name.");
+                throw new EnigmaException("'(' or ')' not allowed" +
+                        " in rotor name.");
             }
             while (_config.hasNext(".*[(|)]+.*")) {
                 cycle.append(_config.next());
             }
-            Permutation permutation = new Permutation(cycle.toString(), _alphabet);
+            Permutation permutation = new Permutation
+                    (cycle.toString(), _alphabet);
             if (type == 'M') {
                 rotor = new MovingRotor(name, permutation, notch);
             } else if (type == 'N') {

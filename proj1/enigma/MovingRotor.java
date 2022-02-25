@@ -34,7 +34,7 @@ class MovingRotor extends Rotor {
         return _notches;
     }
 
-    /** A String variable to save Notches for MovingRotors
+    /** A String variable to save Notches for MovingRotors.
      */
     private final String _notches;
 

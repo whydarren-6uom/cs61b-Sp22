@@ -56,7 +56,8 @@ class Machine {
      *  to the leftmost rotor setting (not counting the reflector).  */
     void setRotors(String setting) {
         for (int i = 1; i < numRotors(); i++) {
-            _insertedRotors.get(i)._setting = _alphabet.toInt(setting.charAt(i - 1));
+            _insertedRotors.get(i)._setting =
+                    _alphabet.toInt(setting.charAt(i - 1));
         }
     }
 
