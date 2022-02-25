@@ -14,7 +14,7 @@ import static enigma.TestUtils.*;
  * this class concrete by removing the 4 abstract keywords and implementing the
  * 3 abstract methods.
  *
- *  @author
+ *  @author D.Wang
  */
 public abstract class PermutationTest {
 
@@ -82,5 +82,62 @@ public abstract class PermutationTest {
         checkPerm("identity", UPPER_STRING, UPPER_STRING, perm, alpha);
     }
 
-    // FIXME: Add tests here that pass on a correct Permutation and fail on buggy Permutations.
+    @Test
+    public void testInvertChar() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        assertEquals('D', p.invert('B'));
+    }
+
+    @Test
+    public void testPermuteChar() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        assertEquals('A', p.permute('B'));
+    }
+
+    @Test
+    public void testInvertNumber() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        assertEquals(3, p.invert(1));
+    }
+
+    @Test
+    public void testPermuteNumber() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        assertEquals(0, p.permute(1));
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabetInvert() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        p.invert('F');
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabetPermute() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        p.permute('F');
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabetInvertNum() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        p.invert(5);
+    }
+
+    @Test(expected = EnigmaException.class)
+    public void testNotInAlphabetPermuteNum() {
+        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
+        p.permute(5);
+    }
+
+    @Test
+    public void testCheckpoint() {
+        Permutation p = getNewPermutation("(wordle) (is) (fun)", getNewAlphabet("abcdefghijklmnopqrstuvwxyz"));
+        assertEquals('a', p.permute('a'));
+        assertEquals('s', p.permute('i'));
+        assertEquals('a', p.invert('a'));
+        assertEquals('s', p.invert('i'));
+    }
+
+
 }
