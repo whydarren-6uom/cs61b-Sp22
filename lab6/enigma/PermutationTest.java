@@ -118,18 +118,6 @@ public abstract class PermutationTest {
         p.permute('F');
     }
 
-    @Test(expected = EnigmaException.class)
-    public void testNotInAlphabetInvertNum() {
-        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
-        p.invert(5);
-    }
-
-    @Test(expected = EnigmaException.class)
-    public void testNotInAlphabetPermuteNum() {
-        Permutation p = getNewPermutation("(BACD)", getNewAlphabet("ABCD"));
-        p.permute(5);
-    }
-
     @Test
     public void testCheckpoint() {
         Permutation p = getNewPermutation("(wordle) (is) (fun)", getNewAlphabet("abcdefghijklmnopqrstuvwxyz"));
@@ -138,6 +126,5 @@ public abstract class PermutationTest {
         assertEquals('a', p.invert('a'));
         assertEquals('s', p.invert('i'));
     }
-
 
 }
