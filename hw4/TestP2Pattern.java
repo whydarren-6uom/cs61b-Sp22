@@ -50,20 +50,24 @@ public class TestP2Pattern {
         String good1 = "(1, 2, 33, 1, 63)";
         String good2 = "(1, 0, 3, 4, 5, 6, 7, 12312, 41)";
         String good3 = "(512,    41, 7,     2, 9)";
+        String good4 = "(19)";
         assertTrue(checkMatch(p, good1));
         assertTrue(checkMatch(p, good2));
         assertTrue(checkMatch(p, good3));
+        assertTrue(checkMatch(p, good4));
 
         String bad1 = "6, 1, 4, 1, 2, 3";
         String bad2 = "(6, 1, 4, 1, 2, 3,)";
         String bad3 = "(, 6, 1, 4, 1, 2, 3)";
         String bad4 = "(,6, 1, 4, 1, 2, 3)";
         String bad5 = "()";
+        String bad6 = "(1,2)";
         assertFalse(checkMatch(p, bad1));
         assertFalse(checkMatch(p, bad2));
         assertFalse(checkMatch(p, bad3));
         assertFalse(checkMatch(p, bad4));
         assertFalse(checkMatch(p, bad5));
+        assertFalse(checkMatch(p, bad6));
     }
 
     @Test

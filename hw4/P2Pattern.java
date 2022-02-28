@@ -8,7 +8,7 @@ public class P2Pattern {
             = "(0?\\d|1[0-2])\\/([0-2]?\\d|3[01])\\/\\d\\d\\d\\d";
 
     /** Pattern to match 61b notation for literal IntLists. */
-    public static String P2 = "(.\\s*\\d+)+.";
+    public static String P2 = "\\(\\d+(,\\s+\\d+)*\\)";
 
     /* Pattern to match a valid domain name. Eg: www.support.facebook-login.com */
     public static String P3
