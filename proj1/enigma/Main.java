@@ -123,7 +123,18 @@ public final class Main {
                         ("\s", "");
                 printMessageLine(machine.convert(nextLine));
             }
-            _output.print("\n");
+            if (_input.hasNextLine()) {
+                _input.useDelimiter("[ \t*]+");
+                while (_input.hasNext("(\r\n)+")
+                        || _input.hasNext("(\n)+")) {
+                    String reststr = _input.next();
+                    reststr = reststr.replaceAll("\r", "");
+                    for (int i = 0; i < reststr.length(); i += 1) {
+                        _output.print("\r\n");
+                    }
+                }
+                _input.useDelimiter("\\s+");
+            }
         }
     }
 
@@ -228,6 +239,7 @@ public final class Main {
                 _output.print(" ");
             }
         }
+        _output.print("\r\n");
     }
 
     /** Alphabet used in this machine. */
