@@ -128,7 +128,7 @@ public final class Main {
             while (_config.hasNext()) {
                 Rotor rotor = readRotor();
                 if (rotors.containsKey(rotor.name())) {
-                    throw new EnigmaException("Duplicate rotor detected.");
+                    throw error("Duplicate rotor detected.");
                 }
                 rotors.put(rotor.name(), rotor);
             }
@@ -148,7 +148,7 @@ public final class Main {
             String notch = typeNotch.substring(1);
             StringBuilder cycle = new StringBuilder();
             if (name.contains("(") || name.contains(")")) {
-                throw new EnigmaException("'(' or ')' not allowed"
+                throw error("'(' or ')' not allowed"
                         + " in rotor name.");
             }
             while (_config.hasNext(".*[(|)]+.*")) {
@@ -158,25 +158,25 @@ public final class Main {
                     = new Permutation(cycle.toString(), _alphabet);
             if (type == 'M') {
                 if (notch.length() == 0) {
-                    throw new EnigmaException("No notch detected "
+                    throw error("No notch detected "
                             + "for moving rotor.");
                 }
                 checkNotchAlphabet(_alphabet, notch);
                 rotor = new MovingRotor(name, permutation, notch);
             } else if (type == 'N') {
                 if (notch.length() != 0) {
-                    throw new EnigmaException("Notch detected for "
+                    throw error("Notch detected for "
                             + "a fixed rotor.");
                 }
                 rotor = new FixedRotor(name, permutation);
             } else if (type == 'R') {
                 if (notch.length() != 0) {
-                    throw new EnigmaException("Notch detected for "
+                    throw error("Notch detected for "
                             + "a reflector.");
                 }
                 rotor = new Reflector(name, permutation);
             } else {
-                throw new EnigmaException("No Such Kind of Rotor");
+                throw error("No Such Kind of Rotor");
             }
             return rotor;
         } catch (NoSuchElementException excp) {
@@ -191,7 +191,7 @@ public final class Main {
     private void checkNotchAlphabet(Alphabet alpha, String notch) {
         for (int i = 0; i < notch.length(); i += 1) {
             if (!alpha.contains(notch.charAt(i))) {
-                throw new EnigmaException("Notch "
+                throw error("Notch "
                         + notch.charAt(i)
                         + " not found in alphabet.");
             }
