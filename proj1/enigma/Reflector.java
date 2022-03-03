@@ -18,11 +18,6 @@ class Reflector extends FixedRotor {
     }
 
     @Override
-    boolean reflecting() {
-        return true;
-    }
-
-    @Override
     void set(int posn) {
         if (posn != 0) {
             throw error("reflector has only one position");

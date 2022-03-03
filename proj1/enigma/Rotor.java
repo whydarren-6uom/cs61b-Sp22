@@ -36,14 +36,14 @@ class Rotor {
         return false;
     }
 
-    /** Return true iff I reflect. */
-    boolean reflecting() {
-        return false;
-    }
-
     /** Return my current setting. */
     int setting() {
         return _setting;
+    }
+
+    /** Return my current ringSetting. */
+    int ringSetting() {
+        return _ringSetting;
     }
 
     /** Set setting() to POSN.  */
@@ -51,15 +51,16 @@ class Rotor {
         _setting = posn;
     }
 
-    /** Set setting() to character CPOSN. */
-    void set(char cposn) {
-        _setting = alphabet().toInt(cposn);
+    /** Set ringSetting() of rotor to character CPOSN. */
+    void setRing(char cposn) {
+        _ringSetting = permutation().alphabet().toInt(cposn);
     }
 
     /** Return the conversion of P (an integer in the range 0..size()-1)
      *  according to my permutation. */
     int convertForward(int p) {
-        int result = permutation().permute(p + setting()) - setting();
+        int result = permutation().permute(p + setting() - ringSetting())
+                - setting() + ringSetting();
         result = permutation().wrap(result);
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
@@ -70,7 +71,8 @@ class Rotor {
     /** Return the conversion of E (an integer in the range 0..size()-1)
      *  according to the inverse of my permutation. */
     int convertBackward(int e) {
-        int result = permutation().invert(e + setting()) - setting();
+        int result = permutation().invert(e + setting() - ringSetting())
+                - setting() + ringSetting();
         result = permutation().wrap(result);
         if (Main.verbose()) {
             System.err.printf("%c -> ", alphabet().toChar(result));
@@ -108,4 +110,9 @@ class Rotor {
     /** Current setting of a Rotor. By default 0.
      */
     protected int _setting = 0;
+
+    /** Current ring setting of a rotor.
+     * By default 0.
+     */
+    protected int _ringSetting;
 }

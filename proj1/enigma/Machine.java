@@ -138,6 +138,23 @@ class Machine {
         return result.toString();
     }
 
+    /** Set the ring setting to RINGSETTING.
+     * By default, start with the first char in alphabet
+     * @param ringsetting RINGSETTING
+     * */
+    void setRing(String ringsetting) {
+        if (ringsetting.equals("")) {
+            StringBuilder ringsettingBuilder = new StringBuilder(ringsetting);
+            for (int i = 1; i < numRotors(); i++) {
+                ringsettingBuilder.append(alphabet().toChar(0));
+            }
+            ringsetting = ringsettingBuilder.toString();
+        }
+        for (int i = 1; i < numRotors(); i++) {
+            _insertedRotors.get(i).setRing(ringsetting.charAt(i - 1));
+        }
+    }
+
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
 

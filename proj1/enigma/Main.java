@@ -102,11 +102,21 @@ public final class Main {
             }
             machine.insertRotors(rotors);
             setUp(machine, _input.next());
+
+            Scanner scanner = new Scanner(_input.nextLine());
+            String ringsetting = "";
+            if (scanner.hasNext()
+                    && !scanner.hasNext("(?<!\\()(\\(.+\\))(?!\\))")) {
+                ringsetting = scanner.next();
+            }
+            machine.setRing(ringsetting);
+
             StringBuilder cycle = new StringBuilder();
-            while (_input.hasNext(".*([()])+.*")) {
-                cycle.append(_input.next());
+            while (scanner.hasNext(".*([()])+.*")) {
+                cycle.append(scanner.next());
             }
             machine.setPlugboard(new Permutation(cycle.toString(), _alphabet));
+
             while (_input.hasNextLine()
                     && !_input.hasNext("(?<=^|\n)\\*.*")) {
                 String nextLine = _input.nextLine().replaceAll
