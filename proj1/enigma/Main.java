@@ -87,7 +87,7 @@ public final class Main {
     private void process() {
         Machine machine = readConfig();
         if (!_input.hasNext("(?<=^|\n)\\*.*")) {
-            throw new EnigmaException("Invalid input file.");
+            throw error("Invalid input file.");
         }
         while (_input.hasNext("(?<=^|\n)\\*.*")) {
             String[] rotors = new String[machine.numRotors()];
@@ -95,7 +95,7 @@ public final class Main {
             if (ifstar.equals("*")) {
                 rotors[0] = _input.next();
             } else {
-                rotors[0] = ifstar.substring(1);
+                throw error("No * sign at the beginning");
             }
             for (int i = 1; i < machine.numRotors(); i++) {
                 rotors[i] = _input.next();
