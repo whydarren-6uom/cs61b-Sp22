@@ -92,17 +92,37 @@ public final class Main {
         while (_input.hasNext("(?<=^|\n)\\*.*")) {
             String[] rotors = new String[machine.numRotors()];
             String ifstar = _input.next();
+            String firstrotor = _input.next();
             if (ifstar.equals("*")) {
-                rotors[0] = _input.next();
+                rotors[0] = firstrotor;
             } else {
                 throw error("No * sign at the beginning");
             }
-            for (int i = 1; i < machine.numRotors(); i++) {
-                rotors[i] = _input.next();
+            String nonmoving = _input.next();
+            if (machine.findRotors(nonmoving) == null) {
+                throw error("No such rotor in the rotor stock.");
+            } else if (!machine.findRotors(nonmoving).rotates()) {
+                rotors[1] = nonmoving;
+                for (int i = 2; i < machine.numRotors(); i++) {
+                    rotors[i] = _input.next();
+                }
+            } else {
+                if (machine.numRotors() - machine.numPawls() > 1) {
+                    rotors = new String[machine.numRotors() - 1];
+                    machine.alterNumRotors(machine.numRotors() - 1);
+                    rotors[0] = firstrotor;
+                }
+                rotors[1] = nonmoving;
+                for (int i = 2; i < machine.numRotors(); i++) {
+                    rotors[i] = _input.next();
+                }
             }
             machine.insertRotors(rotors);
-            setUp(machine, _input.next());
-
+            String settings = _input.next();
+            if (settings.length() + 1 != machine.numRotors()) {
+                throw error("Settings wrong.");
+            }
+            setUp(machine, settings);
             Scanner scanner = new Scanner(_input.nextLine());
             String ringsetting = "";
             if (scanner.hasNext()
@@ -110,31 +130,37 @@ public final class Main {
                 ringsetting = scanner.next();
             }
             machine.setRing(ringsetting);
-
             StringBuilder cycle = new StringBuilder();
             while (scanner.hasNext(".*([()])+.*")) {
                 cycle.append(scanner.next());
             }
             machine.setPlugboard(new Permutation(cycle.toString(), _alphabet));
-
             while (_input.hasNextLine()
                     && !_input.hasNext("(?<=^|\n)\\*.*")) {
                 String nextLine = _input.nextLine().replaceAll
                         ("\s", "");
                 printMessageLine(machine.convert(nextLine));
             }
-            if (_input.hasNextLine()) {
-                _input.useDelimiter("[ \t*]+");
-                while (_input.hasNext("(\r\n)+")
-                        || _input.hasNext("(\n)+")) {
-                    String reststr = _input.next();
-                    reststr = reststr.replaceAll("\r", "");
-                    for (int i = 0; i < reststr.length(); i += 1) {
-                        _output.print("\r\n");
-                    }
+            restProcess();
+        }
+    }
+
+    /**
+     * The rest of process().
+     */
+    private void restProcess() {
+
+        if (_input.hasNextLine()) {
+            _input.useDelimiter("[ \t*]+");
+            while (_input.hasNext("(\r\n)+")
+                    || _input.hasNext("(\n)+")) {
+                String reststr = _input.next();
+                reststr = reststr.replaceAll("\r", "");
+                for (int i = 0; i < reststr.length(); i += 1) {
+                    _output.print("\r\n");
                 }
-                _input.useDelimiter("\\s+");
             }
+            _input.useDelimiter("\\s+");
         }
     }
 

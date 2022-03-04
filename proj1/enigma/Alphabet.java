@@ -1,5 +1,7 @@
 package enigma;
 
+import static enigma.EnigmaException.*;
+
 /** An alphabet of encodable characters.  Provides a mapping from characters
  *  to and from indices into the alphabet.
  *  @author Darren Wang
@@ -30,13 +32,21 @@ class Alphabet {
     /** Returns character number INDEX in the alphabet, where
      *  0 <= INDEX < size(). */
     char toChar(int index) {
-        return _chars.charAt(index);
+        try {
+            return _chars.charAt(index);
+        } catch (StringIndexOutOfBoundsException e) {
+            throw error("The character does not exist.");
+        }
     }
 
     /** Returns the index of character CH which must be in
      *  the alphabet. This is the inverse of toChar(). */
     int toInt(char ch) {
-        return _chars.indexOf(ch);
+        try {
+            return _chars.indexOf(ch);
+        } catch (StringIndexOutOfBoundsException e) {
+            throw error("The character does not exist.");
+        }
     }
 
     /** All characters in an alphabet by sequence.

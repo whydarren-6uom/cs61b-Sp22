@@ -1,5 +1,9 @@
 package enigma;
 
+import java.util.Stack;
+
+import static enigma.EnigmaException.error;
+
 /** Represents a permutation of a range of integers starting at 0 corresponding
  *  to the characters of an alphabet.
  *  @author Darren Wang
@@ -14,6 +18,30 @@ class Permutation {
     Permutation(String cycles, Alphabet alphabet) {
         _alphabet = alphabet;
         _cycles = cycles.replaceAll("\s", "");
+        if (!isFullParenthesis(_cycles)) {
+            throw error("Parenthesis in cycle are not full.");
+        }
+    }
+
+    /**
+     * Check if the parenthesis in cycles are full.
+     * @param s cycles
+     * @return if the parenthesis are full
+     */
+    boolean isFullParenthesis(String s) {
+        char[] array = s.toCharArray();
+        Stack<Character> set = new Stack<>();
+        for (Character chr : array) {
+            if (chr == '(') {
+                set.push(chr);
+            } else if (chr == ')') {
+                if (set.isEmpty() || set.peek() != '(') {
+                    return false;
+                }
+                set.pop();
+            }
+        }
+        return set.size() == 0;
     }
 
     /** Return the value of P modulo the size of this permutation. */

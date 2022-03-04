@@ -2,6 +2,10 @@ package enigma;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import static enigma.EnigmaException.error;
 
 /** Class that represents a complete enigma machine.
  *  @author Darren Wang
@@ -26,6 +30,14 @@ class Machine {
         return _numRotors;
     }
 
+    /**
+     * Change the numRotor.
+     * @param i num of rotors.
+     */
+    void alterNumRotors(int i) {
+        _numRotors = i;
+    }
+
     /** Return the number pawls (and thus rotating rotors) I have. */
     int numPawls() {
         return _pawls;
@@ -46,7 +58,19 @@ class Machine {
      *  available rotors (ROTORS[0] names the reflector).
      *  Initially, all rotors are set at their 0 setting. */
     void insertRotors(String[] rotors) {
+        Set<String> set = new HashSet<>();
         for (int i = 0; i < numRotors(); i++) {
+            if (i == 0 && !_allRotorsMap.get(rotors[i]).reflector()) {
+                throw error("Wrong place for the reflector.");
+            }
+            if (!_allRotorsMap.containsKey(rotors[i])) {
+                throw error("No such rotor in the rotor stock.");
+            }
+            if (!set.add(rotors[i])) {
+                throw error("Duplicate rotor detected.");
+            } else {
+                set.add(rotors[i]);
+            }
             _insertedRotors.put(i, _allRotorsMap.get(rotors[i]));
         }
     }
@@ -155,12 +179,25 @@ class Machine {
         }
     }
 
+    /**
+     * Find a rotor based on the name of a rotor.
+     * @param name name of the rotor
+     * @return the rotor
+     */
+    Rotor findRotors(String name) {
+        try {
+            return _allRotorsMap.get(name);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
     /** Common alphabet of my rotors. */
     private final Alphabet _alphabet;
 
     /** Number of Rotors slots on a machine.
      */
-    private final int _numRotors;
+    private int _numRotors;
 
     /** Number of pawls on a machine. It also represents the
      *  number of MovingRotors.

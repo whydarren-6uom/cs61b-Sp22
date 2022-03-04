@@ -36,6 +36,11 @@ class Rotor {
         return false;
     }
 
+    /** Return true iff I is a reflector. */
+    boolean reflector() {
+        return false;
+    }
+
     /** Return my current setting. */
     int setting() {
         return _setting;
