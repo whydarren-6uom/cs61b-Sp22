@@ -7,7 +7,7 @@ import java.util.List;
 
 public class AmortizationTiming {
 
-    private static final int MAX_SIZE = 1024;
+    private static final int MAX_SIZE = 100;
     private static final int N_LISTS = 1000;
 
     public static void main(String[] args) {

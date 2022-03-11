@@ -8,8 +8,8 @@ import java.util.List;
 public class SortTiming {
 
     private static final int N_TRIALS = 50;
-    private static final int BY = 100;
-    private static final int N_REPEATS = 10;
+    private static final int BY = 300;
+    private static final int N_REPEATS = 2;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
