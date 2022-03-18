@@ -11,7 +11,7 @@ import static java.lang.Math.min;
 import static java.lang.Math.max;
 
 /** A Player that computes its own moves.
- *  @author
+ *  @author Darren Wang
  */
 class AI extends Player {
 

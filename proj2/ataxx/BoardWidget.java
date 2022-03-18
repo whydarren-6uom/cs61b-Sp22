@@ -18,7 +18,7 @@ import static ataxx.PieceColor.*;
 import static ataxx.Utils.*;
 
 /** Widget for displaying an Ataxx board.
- *  @author
+ *  @author Darren Wang
  */
 class BoardWidget extends Pad  {
 

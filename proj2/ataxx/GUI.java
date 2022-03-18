@@ -18,7 +18,7 @@ import static ataxx.PieceColor.*;
 import static ataxx.Utils.*;
 
 /** The GUI for the Ataxx game.
- *  @author
+ *  @author Darren Wang
  */
 class GUI extends TopLevel implements View, CommandSource, Reporter {
 
